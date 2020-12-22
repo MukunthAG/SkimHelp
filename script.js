@@ -1,7 +1,7 @@
 //if stored values are ready, display those values after since the user closes the extension and reopens it.
 
 chrome.storage.local.get(['listr', 'header'], function(ref) { 
-    if (ref.listr) {
+    if (ref.listr) { 
         $("#allData").append(ref.header);
         $("#allData").append(`<ol id="items">${ref.listr}</ol>`);
     }
@@ -49,7 +49,7 @@ document.getElementById("point").addEventListener("keypress", function(info) {
 
         listr += `<li>${point.value}</li>`
         document.getElementById("point").value = ""; //clears the input field for next input
-        chrome.storage.local.set({"listr": listr, "header": header, "i": i}) //store some important variables
+        chrome.storage.local.set({"listr": listr, "header": header, "i": i}) //temporart storage for review
 
         }, 0)
     }
@@ -57,6 +57,41 @@ document.getElementById("point").addEventListener("keypress", function(info) {
 
 //Remembers the points
 
+let permanentStorage = [];
+
+chrome.storage.local.get(['permanentStorage'], arg => {
+    if (arg.permanentStorage) {
+        permanentStorage = arg.permanentStorage;
+    }
+})
+
 document.getElementById("submit").onclick = function() {
-    
+
+    //get the value from temporary storage
+
+    chrome.storage.local.get(['listr', 'header'], function(para) {
+
+        //create a temporary object to push
+
+        let tempObj = {'listr': para.listr, 'header': para.header}; 
+        console.log("tempObj: " + tempObj); //CCCCCC
+        permanentStorage.push(tempObj);
+        
+        //store the array with the permanent storage
+
+        chrome.storage.local.set({'permanentStorage': permanentStorage});
+        chrome.storage.local.get(['permanentStorage'], bla => { //CCCCCC
+            console.log(bla.permanentStorage);
+            
+        })
+
+        // Remove the old temporary shit
+
+        chrome.storage.local.remove(['listr', 'header', 'i']);
+        chrome.storage.local.get(['listr', 'header', 'i'], blabla => { //CCCCCC
+            console.log(blabla.listr);
+        })
+
+
+    });
 }
