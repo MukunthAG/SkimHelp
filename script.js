@@ -1,17 +1,28 @@
 //if stored values are ready, display those values after since the user closes the extension and reopens it.
 
-chrome.storage.local.get(['listr', 'header'], function(ref) { 
+chrome.storage.local.get(['listr', 'header', 'permanentStorage'], function(ref) { 
     if (ref.listr) { 
         $("#allData").append(ref.header);
         $("#allData").append(`<ol id="items">${ref.listr}</ol>`);
     }
+    letmeknow = ref.permanentStorage;
+    if (ref.permanentStorage) {
+        for (let j = 0; j < ref.permanentStorage.length; j++) {
+            $("#main").append(`<div class="infoHolder" id=${j}><h4>${ref.permanentStorage[j].header}</div>`);
+            $("#" + j).append(`<ol id="items${j}"></ol>`); //style="display: none;" ###
+            $("#items" + j).append(ref.permanentStorage[j].listr)
+        }
+    }
 })
+
+//Show content from permanent storage (sometime later)
+
 
 //Title and url constructor
 
 let header = " "; 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-    header = `<h4>Title: ${tabs[0].title}</h4><h4>Url: ${tabs[0].url}</h4>`
+    header = `<h4>Title: ${tabs[0].title}<h4>`
 })
 
 //Some Important global variables
@@ -71,27 +82,21 @@ document.getElementById("submit").onclick = function() {
 
     chrome.storage.local.get(['listr', 'header'], function(para) {
 
-        //create a temporary object to push
+        if (para.listr) {
 
-        let tempObj = {'listr': para.listr, 'header': para.header}; 
-        console.log("tempObj: " + tempObj); //CCCCCC
-        permanentStorage.push(tempObj);
-        
-        //store the array with the permanent storage
+            //create a temporary object to push
 
-        chrome.storage.local.set({'permanentStorage': permanentStorage});
-        chrome.storage.local.get(['permanentStorage'], bla => { //CCCCCC
-            console.log(bla.permanentStorage);
+            let tempObj = {'listr': para.listr, 'header': para.header}; 
+            permanentStorage.push(tempObj);
             
-        })
+            //store the array with the permanent storage
 
-        // Remove the old temporary shit
+            chrome.storage.local.set({'permanentStorage': permanentStorage});
 
-        chrome.storage.local.remove(['listr', 'header', 'i']);
-        chrome.storage.local.get(['listr', 'header', 'i'], blabla => { //CCCCCC
-            console.log(blabla.listr);
-        })
+            // Remove the old temporary shit
 
+            chrome.storage.local.remove(['listr', 'header', 'i']);
 
+        }
     });
 }

@@ -1,8 +1,8 @@
 {
     "name": "SkimHelp",
-    "version": "1.0",
+    "version": "0.1",
     "manifest_version": 2,
-    "description": "Save key ideas when you read an article or a blog",
+    "description": "Save key ideas when reading an article, so that you can review it later, currently under development",
     "permissions": ["storage", "tabs"],
     "browser_action": {
         "default_popup": "popup.html"
