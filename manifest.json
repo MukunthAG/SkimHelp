@@ -1,0 +1,13 @@
+{
+    "name": "SkimHelp",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Save key ideas when you read an article or a blog",
+    "permissions": ["storage", "tabs"],
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "scripts": ["back.js"]
+    }
+}
