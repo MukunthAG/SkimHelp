@@ -5,24 +5,32 @@ chrome.storage.local.get(['listr', 'header', 'permanentStorage'], function(ref) 
         $("#allData").append(ref.header);
         $("#allData").append(`<ol id="items">${ref.listr}</ol>`);
     }
-    letmeknow = ref.permanentStorage;
     if (ref.permanentStorage) {
         for (let j = 0; j < ref.permanentStorage.length; j++) {
-            $("#main").append(`<div class="infoHolder" id=${j}><h4>${ref.permanentStorage[j].header}</div>`);
-            $("#" + j).append(`<ol id="items${j}"></ol>`); //style="display: none;" ###
-            $("#items" + j).append(ref.permanentStorage[j].listr)
+            $("#main").append(`<div id=select${j}><h4 class="infoHolder">${ref.permanentStorage[j].header.slice(4)}</div>`);
+            $("#select" + j).append(`<ol style="display: none;" id="${j}"></ol>`); 
+            $("#" + j).append(ref.permanentStorage[j].listr)
         }
     }
 })
 
 //Show content from permanent storage (sometime later)
-
-
+$(function() {
+$(".infoHolder").click(function (event) {
+    let id = event.target.parentNode.id.slice(6); 
+    if (document.getElementById(id).style.display === "block") {
+        document.getElementById(id).style.display = "none"
+    }
+    else {
+        document.getElementById(id).style.display = "block"
+    }
+})
+})
 //Title and url constructor
 
 let header = " "; 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-    header = `<h4>Title: ${tabs[0].title}<h4>`
+    header = `<h4>Title: ${tabs[0].title}</h4>`
 })
 
 //Some Important global variables
